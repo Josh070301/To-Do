@@ -107,17 +107,18 @@ export class TodoService {
 
 
   // SECTION (POST) Method to add a new Todo
-  addTodo(title: string, description?: string) {
+  addTodo(title: string, description?: string, date_deadline?: Date) {
     const newTodo: Todo = {
       id: uuidv4(),
       title,
       description,
+      date_deadline,
       completed: false,
       date_created: new Date()
     };
 
     this.todos.push(newTodo)
-    // console.log('Adding task:', newTodo);
+    console.log('Adding task:', newTodo);
     // NOTE Saves the new todo to the local storage then loads the todos from local storage
     this.saveToLocalStorage();
 
@@ -130,12 +131,12 @@ export class TodoService {
 
 
   // SECTION (PUT) Method to update an existing Todo
-  updateTodo(id: string, title: string, description?: string) {
+  updateTodo(id: string, title: string, description?: string, date_deadline?: Date) {
     const todoIndex = this.todos.findIndex((todo) => todo.id === id);
     
     // NOTE Conditional check to see if the todo exists, index always starts at 0
     if (todoIndex > -1) {
-      this.todos[todoIndex] = { ...this.todos[todoIndex], title, description };
+      this.todos[todoIndex] = { ...this.todos[todoIndex], title, description, date_deadline };
       this.saveToLocalStorage();
     }
 
@@ -191,6 +192,7 @@ export class TodoService {
 
       // NOTE Saves to the variable todos by parsing the data to JSON format
       this.todos = JSON.parse(savedTodos);
+      console.log(this.todos)
     }
   }
 

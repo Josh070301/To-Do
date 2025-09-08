@@ -54,9 +54,12 @@
           </div>
           <p class="text-gray-700 text-base">{{todo.description || 'Undefined'}}</p>
         </div>
-        <div class="flex items-center">
+        <div class="flex flex-col">
           <div class="text-sm">
-            <p class="text-gray-600">{{todo.date_created ? service.formatDate(todo.date_created) : 'Undefined'}}</p>
+            <p class="text-gray-600">Deadline: {{todo.date_deadline ? service.formatDate(todo.date_deadline) : 'None'}}</p>
+          </div>
+          <div class="text-sm">
+            <p class="text-gray-600">Created: {{todo.date_created ? service.formatDate(todo.date_created) : 'Error date creation data'}}</p>
           </div>
         </div>
       </div>
@@ -110,6 +113,7 @@
           [id]="todoToUpdate?.id ?? ''"
           [title]="todoToUpdate?.title ?? ''"
           [description]="todoToUpdate?.description ?? ''"
+          [date_deadline]="todoToUpdate?.date_deadline ?? undefined"
           (updateTask)="handleUpdateTask($event)"
           (cancel)="closeUpdateTaskDialog()"
         ></app-update-task>

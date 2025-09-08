@@ -3,6 +3,8 @@ import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
 
+// NOTE PrimeNG
+import { provideAnimations } from '@angular/platform-browser/animations'; // <-- Add this import
 import { providePrimeNG } from 'primeng/config';
 import Lara from '@primeuix/themes/lara';
 
@@ -15,6 +17,7 @@ export const appConfig: ApplicationConfig = {
         theme: {
             preset: Lara
         }
-    })
+    }),
+    provideAnimations()
   ]
 };

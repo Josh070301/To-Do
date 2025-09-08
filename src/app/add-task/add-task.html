@@ -1,43 +1,54 @@
 <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
-  <div>
-    <label for="title" class="block text-sm font-medium text-gray-700 mb-1">Title*</label>
-    <input 
-      type="text" 
-      id="title" 
-      formControlName="title" 
-      placeholder="Enter task title"
-      class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-    />
-    @if (form.get('title')?.invalid && form.get('title')?.touched) {
-      <p class="mt-1 text-sm text-red-600">Title is required</p>
-    }
-  </div>
-  
-  <div>
-    <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
-    <textarea 
-      id="description" 
-      formControlName="description"
-      placeholder="Enter task description (optional)"
-      rows="3" 
-      class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-    ></textarea>
-  </div>
-  
-  <div class="flex justify-end gap-2 pt-4">
-    <button 
-      type="button"
-      (click)="onCancel()" 
-      class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-    >
-      Discard
-    </button>
-    <button 
-      type="submit" 
-      [disabled]="form.invalid"
-      class="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-    >
-      Add Task
-    </button>
-  </div>
+    <div>
+        <label for="title" class="block text-sm font-medium text-gray-700 mb-1">Title*</label>
+        <input 
+        type="text" 
+        id="title" 
+        formControlName="title" 
+        placeholder="Enter task title"
+        class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+        />
+        @if (form.get('title')?.invalid && form.get('title')?.touched) {
+        <p class="mt-1 text-sm text-red-600">Title is required</p>
+        }
+    </div>
+
+    <div>
+        <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+        <textarea 
+        id="description" 
+        formControlName="description"
+        placeholder="Enter task description (optional)"
+        rows="3" 
+        class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+        ></textarea>
+    </div>
+
+    <div>
+        <label for="date_deadline" class="block text-sm font-medium text-gray-700 mb-1">Deadline</label>
+        <p-datepicker 
+        formControlName="date_deadline"
+        [showIcon]="true"
+        inputId="date_deadline"
+        [showOnFocus]="false"
+        class="w-full"
+        />
+    </div>
+
+    <div class="flex justify-end gap-2 pt-4">
+        <button 
+        type="button"
+        (click)="onCancel()" 
+        class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+        >
+        Discard
+        </button>
+        <button 
+        type="submit" 
+        [disabled]="form.invalid"
+        class="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+        Add Task
+        </button>
+    </div>
 </form>

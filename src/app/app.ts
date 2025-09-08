@@ -42,9 +42,9 @@ export class App {
     this.addTaskDialog.set(false);
   }
 
-  handleAddTask({ title, description }: { title: string; description?: string }) {
+  handleAddTask({ title, description, date_deadline }: { title: string; description?: string; date_deadline?: Date }) {
     // console.log('Adding task:', { title, description });
-    this.service.addTodo(title, description);
+    this.service.addTodo(title, description, date_deadline);
     this.closeAddTaskDialog();
   }
 
@@ -58,6 +58,7 @@ export class App {
 
   openUpdateTaskDialog(todo: Todo) {
     this.todoToUpdate = todo;
+    console.log('ToUpdate Data: ', this.todoToUpdate);
     this.updateTaskDialog.set(true);
   }
 
@@ -66,8 +67,8 @@ export class App {
     this.updateTaskDialog.set(false);
   }
 
-  handleUpdateTask({ id, title, description }: { id: string; title: string; description?: string }) {
-    this.service.updateTodo(id, title, description);
+  handleUpdateTask({ id, title, description, date_deadline }: { id: string; title: string; description?: string; date_deadline?: Date }) {
+    this.service.updateTodo(id, title, description, date_deadline);
     this.todos = this.service.getTodos();
     this.closeUpdateTaskDialog();
   }
