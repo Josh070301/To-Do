@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Dialog } from './dialog';
+import { UpdateTask } from './update-task';
 
-describe('Dialog', () => {
-  let component: Dialog;
-  let fixture: ComponentFixture<Dialog>;
+describe('UpdateTask', () => {
+  let component: UpdateTask;
+  let fixture: ComponentFixture<UpdateTask>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Dialog]
+      imports: [UpdateTask]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(Dialog);
+    fixture = TestBed.createComponent(UpdateTask);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
