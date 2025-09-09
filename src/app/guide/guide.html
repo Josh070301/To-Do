@@ -1,0 +1,24 @@
+<div class="card flex justify-center">
+    <p-dialog 
+        header="How to use this application" 
+        [modal]="true" 
+        [visible]="true" 
+        [style]="{ width: '50rem' }" 
+        [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+        [closable]="true"
+        (click)="handleClose()">
+        <div class="p-4">
+            @for (item of items(); track $index) {
+                <div class="mb-3 flex items-start">
+                    <i class="pi pi-info-circle mr-2 text-blue-500 mt-0.5"></i>
+                    <p>{{item}}</p>
+                </div>
+            }
+        </div>
+        <ng-template pTemplate="footer">
+            <div class="flex justify-end">
+                <p-button label="Got it!" (click)="handleClose()" styleClass="p-button-sm"></p-button>
+            </div>
+        </ng-template>
+    </p-dialog>
+</div>

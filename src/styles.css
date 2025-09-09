@@ -14,15 +14,30 @@ body{
 
 /* Custom styles for Completed panel header of p-panel PrimeNG component */
 .completed-panel .p-panel-header {
-  background-color: #85d693 !important;
+  background-color: #66b672 !important;
 }
 
 .pending-panel .p-panel-header {
-  background-color: #96aefa !important;
+  background-color: #7589c9 !important;
+}
+
+.my-task-panel {
+  background-color: #d6d6d6 !important;
 }
 
 
 /* Ensure toast appears above all other elements */
 :host ::ng-deep .p-toast {
   z-index: 1000;
+}
+
+/* Override Lara theme background for main app container with gradient only */
+body,
+.app-background {
+  background-image: linear-gradient(135deg, #2a717a 0%, #b2ebf2 100%);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  min-height: 100vh; /* Ensure background covers at least the viewport height */
+  min-width: 80vw;  /* Ensure background covers at least the viewport width */
 }

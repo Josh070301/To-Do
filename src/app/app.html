@@ -1,10 +1,10 @@
 <!-- Toast Notifications -->
 <p-toast position="bottom-right"/>
-<div class="w-full px-4 py-6">
+<div class="app-background w-full px-4 py-6">
 
-  <div class="flex mx-auto justify-between content-center">
-    <div class="flex items-center gap-2">
-      <p-iconField iconPosition="left">
+  <div class="flex flex-col sm:flex-row items-center gap-2 w-full">
+    <div class="flex items-center gap-2 w-full">
+      <p-iconField iconPosition="left" class="w-full sm:w-64">
         <p-inputIcon class="pi pi-search" />
         <input 
           type="text" 
@@ -13,31 +13,45 @@
           [(ngModel)]="searchTitle"
           (input)="filterTodos()"
           class="w-full"
-          />
+        />
       </p-iconField>
       <p-button 
           label="Clear Filter" 
           [raised]="true" 
           severity="secondary" 
-          (click)="clearFilter()"/>
-
+          (click)="clearFilter()"
+          class="w-full sm:w-auto"
+      />
+      <button
+        type="button"
+        class="ml-0 sm:ml-2 text-white hover:text-gray-200 focus:outline-none transition-colors"
+        (click)="openGuide([
+          'The search box filters tasks by title.',
+          'Use the checkboxes to mark tasks as completed or pending.',
+          'Click the pencil icon to edit a task, and the trash icon to delete a task.',
+          'The Add a Task button opens a form to create a new task.'
+        ])"
+        aria-label="Show Guide"
+      >
+        <i class="pi pi-info-circle mr-2 mt-2" style="font-size: 1.5rem; color: white;"></i>
+      </button>
     </div>
 
     <button
-      class="bg-blue-600 text-white py-2 px-4 rounded-md flex items-center gap-2 font-bold hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+      class="bg-blue-600 text-white py-2 px-4 rounded-md flex items-center gap-2 font-bold hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors w-full sm:w-auto"
       (click)="openAddTaskDialog()">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
         <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
       </svg>
-      Add a Task
+      Add
     </button>
   </div>
   
   <br/>
   <div>
     <!--headers uses Dingbats UTF-8 -->
-    <p-panel [header]="'My Tasks (' + totalTasksCount + ')'" [toggleable]="false">
-      <p-panel [header]="'Pending &#10071; (' + pendingTasksCount + ')' " [toggleable]="true" class="pending-panel">
+    <p-panel [header]="'My Tasks (' + totalTasksCount + ')'" [toggleable]="false" class="my-task-panel">
+      <p-panel [header]="'Pending &#10025; (' + pendingTasksCount + ')' " [toggleable]="true" class="pending-panel">
         <p-table [value]="todos" dataKey="id" [tableStyle]="{'min-width': '50rem'}">
           <ng-template #header>
               <tr>
@@ -80,7 +94,11 @@
                 <td class="whitespace-normal break-words max-w-xs">
                   {{todo.description}}
                 </td>
-                <td>{{todo.date_deadline ? service.formatDate(todo.date_deadline) : 'None'}}</td>
+                <td
+                  [class]="isPastDeadline(todo.date_deadline) ? 'text-red-600 font-bold' : ''"
+                >
+                  {{todo.date_deadline ? service.formatDate(todo.date_deadline) : 'None'}}
+                </td>
                 <td>{{todo.completed ? 'Completed' : 'Pending'}}</td>
               </tr>
             }
@@ -139,7 +157,11 @@
                 <td class="whitespace-normal break-words max-w-xs">
                   {{todo.description}}
                 </td>
-                <td>{{todo.date_deadline ? service.formatDate(todo.date_deadline) : 'None'}}</td>
+                <td
+                  [class]="isPastDeadline(todo.date_deadline) ? 'text-red-600 font-bold' : ''"
+                >
+                  {{todo.date_deadline ? service.formatDate(todo.date_deadline) : 'None'}}
+                </td>
                 <td>{{todo.completed ? 'Completed' : 'Pending'}}</td>
               </tr>
             }
@@ -235,4 +257,8 @@
       </div>
     </div>
   </div>
+}
+
+@if (guideDialog()) {
+  <app-guide [items]="guideItems" (close)="closeGuide()"></app-guide>
 }

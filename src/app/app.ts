@@ -25,7 +25,7 @@ import { ToastService } from './services/toast';
 import { AddTask } from './add-task/add-task';
 import { DeleteTask } from './delete-task/delete-task';
 import { UpdateTask } from './update-task/update-task';
-
+import { Guide } from './guide/guide';
 @Component({
   selector: 'app-root',
   imports: [
@@ -44,6 +44,7 @@ import { UpdateTask } from './update-task/update-task';
     CheckboxModule,
     ButtonModule,
     ToastModule,
+    Guide
   ],
   templateUrl: './app.html',
   styleUrl: './app.css',
@@ -55,6 +56,7 @@ export class App {
   protected service = inject(TodoService);
   protected toastService = inject(ToastService);
   todos = this.service.getTodos();
+  currentDate = new Date()
   
   // SECTION 
   
@@ -71,7 +73,23 @@ export class App {
     return this.todos.filter(todo => !todo.completed).length;
   }
 
+  // NOTE past deadline checker
+  isPastDeadline(date_deadline?: unknown): boolean {
+    if (!date_deadline) {
+      return false;
+    }
+    const deadlineDate = typeof date_deadline === 'string'
+      ? new Date(date_deadline)
+      : date_deadline instanceof Date
+        ? date_deadline
+        : undefined;
+    if (!deadlineDate) return false;
+    return deadlineDate < this.currentDate;
+  }
+
   // !SECTION
+
+
 
   // SECTION - Search Filter
   searchTitle: string = "";
@@ -115,8 +133,15 @@ export class App {
   protected todoToUpdate: Todo | null = null;
 
   openUpdateTaskDialog(todo: Todo) {
-    this.todoToUpdate = todo;
-    console.log('ToUpdate Data: ', this.todoToUpdate);
+    // Ensure date_deadline is a Date object if present
+    const date_deadline = todo.date_deadline
+      ? new Date(todo.date_deadline)
+      : undefined;
+
+    this.todoToUpdate = {
+      ...todo,
+      date_deadline
+    };
     this.updateTaskDialog.set(true);
   }
 
@@ -170,5 +195,21 @@ export class App {
     }
   }
   // !SECTION
-    
+
+
+  
+  // SECTION - Guide Dialog
+  protected readonly guideDialog = signal(false);
+  protected guideItems: string[] = [];
+  openGuide(items: string[]) {
+    this.guideItems = items;
+    this.guideDialog.set(true);
+  }
+   
+  closeGuide() {
+    this.guideItems = [];
+    this.guideDialog.set(false);
+  }
+
+  // !SECTION
 }
