@@ -97,27 +97,37 @@ export class TodoService {
 
 
 
-  // SECTION (GET) Method to return current Stored Todos
-  getTodos() {
-    return this.todos;
+  // SECTION (GET) Method to return current Stored Todos, sorted by latest created_date
+  getTodos(title: string) {
+    let filtered = this.todos;
+    if (title) {
+      filtered = filtered.filter(todo =>
+        todo.title.toLowerCase().includes(title.toLowerCase())
+      );
+    }
+    return [...filtered].sort((a, b) => new Date(b.date_created).getTime() - new Date(a.date_created).getTime());
   }
 
-  // NOTE (GET) with Title filters for searching
-  getFilteredTodos(title: string) {
-    // console.log("Filtering with: ", title)
-    const result = this.todos.filter(todo => todo.title.toLowerCase().includes(title.toLowerCase()));
-    // console.log("Result: ", result)
-    return result;
+  // NOTE (GET) with Completed filters for searching, sorted by latest created_date
+  getTodosCompleted(title: string) {
+    let filtered = this.todos.filter(todo => todo.completed);
+    if (title) {
+      filtered = filtered.filter(todo =>
+        todo.title.toLowerCase().includes(title.toLowerCase())
+      );
+    }
+    return [...filtered].sort((a, b) => new Date(b.date_created).getTime() - new Date(a.date_created).getTime());
   }
 
-  // NOTE (GET) with Completed filters for searching
-  getTodosCompleted() {
-    return this.todos.filter(todo => todo.completed);
-  }
-
-  // NOTE (GET) with Pending filters
-  getTodosPending() {
-    return this.todos.filter(todo => !todo.completed);
+  // NOTE (GET) with Pending filters for searching, sorted by latest created_date
+  getTodosPending(title: string) {
+    let filtered = this.todos.filter(todo => !todo.completed);
+    if (title) {
+      filtered = filtered.filter(todo =>
+        todo.title.toLowerCase().includes(title.toLowerCase())
+      );
+    }
+    return [...filtered].sort((a, b) => new Date(b.date_created).getTime() - new Date(a.date_created).getTime());
   }
 
   // !SECTION

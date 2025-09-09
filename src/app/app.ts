@@ -55,9 +55,9 @@ export class App {
   protected readonly title = signal('To-Do');
   protected service = inject(TodoService);
   protected toastService = inject(ToastService);
-  todos = this.service.getTodos();
-  todosPending = this.service.getTodosPending();
-  todosCompleted = this.service.getTodosCompleted();
+  todos = this.service.getTodos('');
+  todosPending = this.service.getTodosPending('');
+  todosCompleted = this.service.getTodosCompleted('');
   currentDate = new Date()
   
   // SECTION 
@@ -69,13 +69,13 @@ export class App {
 
   get completedTasksCount() {
     let result =  this.todos.filter(todo => todo.completed).length;
-    this.todosCompleted = this.service.getTodosCompleted();
+    this.todosCompleted = this.service.getTodosCompleted(this.searchTitle);
     return result;
   }
 
   get pendingTasksCount() {
     let result =  this.todos.filter(todo => !todo.completed).length;
-    this.todosPending = this.service.getTodosPending();
+    this.todosPending = this.service.getTodosPending(this.searchTitle);
     return result;
   }
 
@@ -100,7 +100,11 @@ export class App {
   // SECTION - Search Filter
   searchTitle: string = "";
   filterTodos() {
-    this.todos = this.service.getFilteredTodos(this.searchTitle);
+    this.todos = this.service.getTodos(this.searchTitle);
+    this.todosPending = this.service.getTodosPending(this.searchTitle);
+    this.todosCompleted = this.service.getTodosCompleted(this.searchTitle);
+    console.log("Searched Pending: ", this.todosPending);
+    console.log("Searched Completed: ", this.todosCompleted);
   }
 
   // NOTE Clears filter
@@ -158,7 +162,7 @@ export class App {
 
   handleUpdateTask({ id, title, description, date_deadline }: { id: string; title: string; description?: string; date_deadline?: Date }) {
     this.service.updateTodo(id, title, description, date_deadline);
-    this.todos = this.service.getTodos();
+    this.todos = this.service.getTodos(this.searchTitle);
     this.closeUpdateTaskDialog();
     this.toastService.showToast('Task updated successfully.', 'success', 'Success');
   }
@@ -169,7 +173,7 @@ export class App {
   // SECTION - Toggle completed status using inject service
   toggleTodo({id}: {id: string}) {
     this.service.toggleCompleted(id);
-    this.todos = this.service.getTodos();
+    this.todos = this.service.getTodos(this.searchTitle);
     this.toastService.showToast('Task status updated.', 'success', 'Success');
   }
 
@@ -195,7 +199,7 @@ export class App {
   handleConfirmDeletion() {
     if (this.todoIdToDelete) {
       this.service.deleteTodo(this.todoIdToDelete);
-      this.todos = this.service.getTodos();
+      this.todos = this.service.getTodos(this.searchTitle);
       this.closeConfirmDeletionDialog();
       this.toastService.showToast('Task deleted successfully.', 'success', 'Success');
     }
