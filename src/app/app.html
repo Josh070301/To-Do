@@ -52,7 +52,14 @@
     <!--headers uses Dingbats UTF-8 -->
     <p-panel [header]="'My Tasks (' + totalTasksCount + ')'" [toggleable]="false" class="my-task-panel">
       <p-panel [header]="'Pending &#10025; (' + pendingTasksCount + ')' " [toggleable]="true" class="pending-panel">
-        <p-table [value]="todos" dataKey="id" [tableStyle]="{'min-width': '50rem'}">
+        <p-table 
+          [value]="todosPending" 
+          dataKey="id" 
+          [tableStyle]="{'min-width': '50rem'}" 
+          [paginator]="true" 
+          [rows]="5" 
+          [rowsPerPageOptions]="[5, 10, 20]"
+          >
           <ng-template #header>
               <tr>
                   <th>Controls</th>
@@ -115,7 +122,13 @@
       
       <br/>
       <p-panel [header]="'Completed &#10003; (' + completedTasksCount + ')' " [toggleable]="true" class="completed-panel">
-        <p-table [value]="todos" dataKey="id" [tableStyle]="{'min-width': '50rem'}">
+        <p-table 
+          [value]="todosCompleted" 
+          dataKey="id" 
+          [tableStyle]="{'min-width': '50rem'}"
+          [paginator]="true" 
+          [rows]="5" 
+          [rowsPerPageOptions]="[5, 10, 20]">
           <ng-template #header>
               <tr>
                   <th>Controls</th> 

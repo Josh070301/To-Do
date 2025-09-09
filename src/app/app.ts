@@ -56,6 +56,8 @@ export class App {
   protected service = inject(TodoService);
   protected toastService = inject(ToastService);
   todos = this.service.getTodos();
+  todosPending = this.service.getTodosPending();
+  todosCompleted = this.service.getTodosCompleted();
   currentDate = new Date()
   
   // SECTION 
@@ -66,11 +68,15 @@ export class App {
   }
 
   get completedTasksCount() {
-    return this.todos.filter(todo => todo.completed).length;
+    let result =  this.todos.filter(todo => todo.completed).length;
+    this.todosCompleted = this.service.getTodosCompleted();
+    return result;
   }
 
   get pendingTasksCount() {
-    return this.todos.filter(todo => !todo.completed).length;
+    let result =  this.todos.filter(todo => !todo.completed).length;
+    this.todosPending = this.service.getTodosPending();
+    return result;
   }
 
   // NOTE past deadline checker

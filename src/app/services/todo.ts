@@ -102,12 +102,22 @@ export class TodoService {
     return this.todos;
   }
 
-  // NOTE (GET) with Title filters
+  // NOTE (GET) with Title filters for searching
   getFilteredTodos(title: string) {
     // console.log("Filtering with: ", title)
     const result = this.todos.filter(todo => todo.title.toLowerCase().includes(title.toLowerCase()));
     // console.log("Result: ", result)
     return result;
+  }
+
+  // NOTE (GET) with Completed filters for searching
+  getTodosCompleted() {
+    return this.todos.filter(todo => todo.completed);
+  }
+
+  // NOTE (GET) with Pending filters
+  getTodosPending() {
+    return this.todos.filter(todo => !todo.completed);
   }
 
   // !SECTION
