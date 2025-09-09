@@ -102,6 +102,14 @@ export class TodoService {
     return this.todos;
   }
 
+  // NOTE (GET) with Title filters
+  getFilteredTodos(title: string) {
+    // console.log("Filtering with: ", title)
+    const result = this.todos.filter(todo => todo.title.toLowerCase().includes(title.toLowerCase()));
+    // console.log("Result: ", result)
+    return result;
+  }
+
   // !SECTION
 
 

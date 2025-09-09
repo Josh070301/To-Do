@@ -2,9 +2,24 @@ import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/cor
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
+// NOTE PrimeNG Components
+import { PanelModule } from 'primeng/panel';
+import { ListboxModule } from 'primeng/listbox';
+import { TableModule } from 'primeng/table';
+import { CheckboxModule } from 'primeng/checkbox';
+import { ButtonModule } from 'primeng/button';
+// NOTE Toasts PrimeNG
+import { ToastModule } from 'primeng/toast';
+
+// NOTE PrimeIcons
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
+import { InputTextModule } from 'primeng/inputtext';
+
 // NOTE ToDo Service and models import
 import { TodoService } from './services/todo';
 import { Todo } from "./models/todo.model";
+import { ToastService } from './services/toast';
 
 // NOTE StandAlone Components imports
 import { AddTask } from './add-task/add-task';
@@ -19,17 +34,59 @@ import { UpdateTask } from './update-task/update-task';
     ReactiveFormsModule,
     AddTask,
     DeleteTask,
-    UpdateTask
+    UpdateTask,
+    IconFieldModule,
+    InputIconModule,
+    InputTextModule,
+    PanelModule,
+    ListboxModule,
+    TableModule,
+    CheckboxModule,
+    ButtonModule,
+    ToastModule,
   ],
   templateUrl: './app.html',
   styleUrl: './app.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class App {
+
   protected readonly title = signal('To-Do');
   protected service = inject(TodoService);
-
+  protected toastService = inject(ToastService);
   todos = this.service.getTodos();
+  
+  // SECTION 
+  
+  // NOTE Reactive states with getter property to allow re-usability without calling it like a function
+  get totalTasksCount() {
+    return this.todos.length;
+  }
+
+  get completedTasksCount() {
+    return this.todos.filter(todo => todo.completed).length;
+  }
+
+  get pendingTasksCount() {
+    return this.todos.filter(todo => !todo.completed).length;
+  }
+
+  // !SECTION
+
+  // SECTION - Search Filter
+  searchTitle: string = "";
+  filterTodos() {
+    this.todos = this.service.getFilteredTodos(this.searchTitle);
+  }
+
+  // NOTE Clears filter
+  clearFilter() {
+    this.searchTitle = '';
+    this.filterTodos();
+  }
+  // !SECTION
+
+
 
   // SECTION - Add Task Dialog
   // NOTE Readonly means it is initialized once then cannot be changed
@@ -42,10 +99,11 @@ export class App {
     this.addTaskDialog.set(false);
   }
 
+
   handleAddTask({ title, description, date_deadline }: { title: string; description?: string; date_deadline?: Date }) {
-    // console.log('Adding task:', { title, description });
     this.service.addTodo(title, description, date_deadline);
     this.closeAddTaskDialog();
+    this.toastService.showToast('Task added successfully.', 'success', 'Success');
   }
 
   // !SECTION
@@ -71,6 +129,7 @@ export class App {
     this.service.updateTodo(id, title, description, date_deadline);
     this.todos = this.service.getTodos();
     this.closeUpdateTaskDialog();
+    this.toastService.showToast('Task updated successfully.', 'success', 'Success');
   }
   // !SECTION
 
@@ -78,8 +137,9 @@ export class App {
 
   // SECTION - Toggle completed status using inject service
   toggleTodo({id}: {id: string}) {
-    this.service.toggleCompleted(id)
+    this.service.toggleCompleted(id);
     this.todos = this.service.getTodos();
+    this.toastService.showToast('Task status updated.', 'success', 'Success');
   }
 
 
@@ -106,6 +166,7 @@ export class App {
       this.service.deleteTodo(this.todoIdToDelete);
       this.todos = this.service.getTodos();
       this.closeConfirmDeletionDialog();
+      this.toastService.showToast('Task deleted successfully.', 'success', 'Success');
     }
   }
   // !SECTION

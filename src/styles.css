@@ -1,8 +1,28 @@
 /* You can add global styles to this file, and also import other style files */
+@import "primeicons/primeicons.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+
 body{
-    margin: 50px    ;
+    margin-top: 40px;
+    margin-left: 30px;
+    margin-right: 30px
+}
+
+/* Custom styles for Completed panel header of p-panel PrimeNG component */
+.completed-panel .p-panel-header {
+  background-color: #85d693 !important;
+}
+
+.pending-panel .p-panel-header {
+  background-color: #96aefa !important;
+}
+
+
+/* Ensure toast appears above all other elements */
+:host ::ng-deep .p-toast {
+  z-index: 1000;
 }

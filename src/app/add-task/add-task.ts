@@ -2,13 +2,17 @@ import { ChangeDetectionStrategy, Component, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DatePickerModule } from 'primeng/datepicker';
+import { InputTextModule } from 'primeng/inputtext';
+import { IftaLabelModule } from 'primeng/iftalabel';
 
 @Component({
   selector: 'app-add-task',
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    DatePickerModule
+    DatePickerModule,
+    InputTextModule,
+    IftaLabelModule
   ],
   templateUrl: './add-task.html',
   styleUrl: './add-task.css',

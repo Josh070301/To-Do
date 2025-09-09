@@ -1,7 +1,28 @@
+<!-- Toast Notifications -->
+<p-toast position="bottom-right"/>
 <div class="w-full px-4 py-6">
-  <!-- Header section with title and add button -->
-  <div class="flex max-w-md mx-auto p-4 justify-between">
-    <h1 class="text-3xl font-bold mb-6">Todo List</h1>
+
+  <div class="flex mx-auto justify-between content-center">
+    <div class="flex items-center gap-2">
+      <p-iconField iconPosition="left">
+        <p-inputIcon class="pi pi-search" />
+        <input 
+          type="text" 
+          pInputText 
+          placeholder="Search task title"
+          [(ngModel)]="searchTitle"
+          (input)="filterTodos()"
+          class="w-full"
+          />
+      </p-iconField>
+      <p-button 
+          label="Clear Filter" 
+          [raised]="true" 
+          severity="secondary" 
+          (click)="clearFilter()"/>
+
+    </div>
+
     <button
       class="bg-blue-600 text-white py-2 px-4 rounded-md flex items-center gap-2 font-bold hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
       (click)="openAddTaskDialog()">
@@ -12,63 +33,129 @@
     </button>
   </div>
   
-  <!-- Todo items grid -->
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-    @for (todo of todos; track todo.id) {
-      <div 
-        class="border border-gray-400 rounded p-4 flex flex-col justify-between leading-normal"
-        [class.bg-green-200]="todo.completed" 
-        [class.bg-white]="!todo.completed"
-      >
-        <div class="mb-8">
-          <div class="flex justify-between">
-            <h4 class="text-gray-900 font-bold text-xl mb-2">{{todo.title || 'Undefined'}}</h4>
-            <div class="flex items-center gap-2">
-              <button
-                (click)="openUpdateTaskDialog(todo)"
-                class="text-blue-600 hover:text-blue-800 focus:outline-none"
-                aria-label="Edit task"
-                type="button"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path d="M17.414 2.586a2 2 0 00-2.828 0l-9.192 9.192a2 2 0 00-.497.879l-1.414 5.657a1 1 0 001.212 1.212l5.657-1.414a2 2 0 00.879-.497l9.192-9.192a2 2 0 000-2.828l-2.121-2.121zm-2.828 1.414l2.121 2.121-9.192 9.192-2.121-2.121 9.192-9.192z"/>
-                </svg>
-              </button>
-              <label class="inline-flex items-center cursor-pointer">
-                <input 
-                  type="checkbox" 
-                  [checked]="todo.completed"
-                  (change)="toggleTodo({id: todo.id})"
-                  class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                >
-              </label>
-              <button 
-                (click)="openConfirmDeletionDialog(todo.id)" 
-                class="text-red-600 hover:text-red-800 focus:outline-none"
-                aria-label="Delete task">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
-                </svg>
-              </button>
-            </div>
-          </div>
-          <p class="text-gray-700 text-base">{{todo.description || 'Undefined'}}</p>
-        </div>
-        <div class="flex flex-col">
-          <div class="text-sm">
-            <p class="text-gray-600">Deadline: {{todo.date_deadline ? service.formatDate(todo.date_deadline) : 'None'}}</p>
-          </div>
-          <div class="text-sm">
-            <p class="text-gray-600">Created: {{todo.date_created ? service.formatDate(todo.date_created) : 'Error date creation data'}}</p>
-          </div>
-        </div>
-      </div>
-    } @empty {
-      <div class="col-span-3 p-4 text-center text-gray-500">
-        No tasks found. Add a new task to get started.
-      </div>
-    }
+  <br/>
+  <div>
+    <!--headers uses Dingbats UTF-8 -->
+    <p-panel [header]="'My Tasks (' + totalTasksCount + ')'" [toggleable]="false">
+      <p-panel [header]="'Pending &#10071; (' + pendingTasksCount + ')' " [toggleable]="true" class="pending-panel">
+        <p-table [value]="todos" dataKey="id" [tableStyle]="{'min-width': '50rem'}">
+          <ng-template #header>
+              <tr>
+                  <th>Controls</th>
+                  <th>Title</th>
+                  <th>Description</th>
+                  <th>Deadline</th>
+                  <th>Status</th>
+              </tr>
+          </ng-template>
+          <ng-template #body let-todo>
+            @if (!todo.completed) {
+              <tr>
+                <td>
+                  <p-checkbox 
+                      [ngModel]="todo.completed"
+                      [binary]="todo.completed" 
+                      (onChange)="toggleTodo({id: todo.id})">
+                  </p-checkbox>
+                  <button
+                    type="button"
+                    class="ml-2 text-blue-600 hover:text-blue-800 focus:outline-none"
+                    (click)="openUpdateTaskDialog(todo)"
+                    aria-label="Edit Task"
+                  >
+                    <i class="pi pi-pencil" style="font-size: 1rem"></i>
+                  </button>
+                  <button
+                    type="button"
+                    class="ml-2 text-red-600 hover:text-red-800 focus:outline-none"
+                    (click)="openConfirmDeletionDialog(todo.id)"
+                    aria-label="Delete Task"
+                  >
+                    <i class="pi pi-trash" style="font-size: 1rem"></i>
+                  </button>
+                </td>
+                <td class="whitespace-normal break-words max-w-xs">
+                  {{todo.title}}
+                </td>
+                <td class="whitespace-normal break-words max-w-xs">
+                  {{todo.description}}
+                </td>
+                <td>{{todo.date_deadline ? service.formatDate(todo.date_deadline) : 'None'}}</td>
+                <td>{{todo.completed ? 'Completed' : 'Pending'}}</td>
+              </tr>
+            }
+          </ng-template>
+          <ng-template #emptymessage>
+            <tr>
+              <td colspan="5" class="text-center text-gray-500 py-4">
+                No pending tasks found.
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </p-panel>
+      
+      <br/>
+      <p-panel [header]="'Completed &#10003; (' + completedTasksCount + ')' " [toggleable]="true" class="completed-panel">
+        <p-table [value]="todos" dataKey="id" [tableStyle]="{'min-width': '50rem'}">
+          <ng-template #header>
+              <tr>
+                  <th>Controls</th> 
+                  <th>Title</th>
+                  <th>Description</th>
+                  <th>Deadline</th>
+                  <th>Status</th>
+              </tr>
+          </ng-template>
+          <ng-template #body let-todo>
+            @if (todo.completed) {
+              <tr class="bg-lime-200">
+                <td>
+                  <p-checkbox 
+                      [ngModel]="todo.completed"
+                      [binary]="todo.completed" 
+                      (onChange)="toggleTodo({id: todo.id})">
+                  </p-checkbox>
+                  <button
+                    type="button"
+                    class="ml-2 text-blue-600 hover:text-blue-800 focus:outline-none"
+                    (click)="openUpdateTaskDialog(todo)"
+                    aria-label="Edit Task"
+                  >
+                    <i class="pi pi-pencil" style="font-size: 1rem"></i>
+                  </button>
+                  <button
+                    type="button"
+                    class="ml-2 text-red-600 hover:text-red-800 focus:outline-none"
+                    (click)="openConfirmDeletionDialog(todo.id)"
+                    aria-label="Delete Task"
+                  >
+                    <i class="pi pi-trash" style="font-size: 1rem"></i>
+                  </button>
+                </td>
+                <td class="whitespace-normal break-words max-w-xs">
+                  {{todo.title}}
+                </td>
+                <td class="whitespace-normal break-words max-w-xs">
+                  {{todo.description}}
+                </td>
+                <td>{{todo.date_deadline ? service.formatDate(todo.date_deadline) : 'None'}}</td>
+                <td>{{todo.completed ? 'Completed' : 'Pending'}}</td>
+              </tr>
+            }
+          </ng-template>
+          <ng-template #emptymessage>
+            <tr>
+              <td colspan="5" class="text-center text-gray-500 py-4">
+                No completed tasks found.
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </p-panel>
+    </p-panel>
   </div>
+
 </div>
 
 <!-- Tailwind Modal - Add Task -->
