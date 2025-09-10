@@ -27,6 +27,8 @@ import { AddTask } from './add-task/add-task';
 import { DeleteTask } from './delete-task/delete-task';
 import { UpdateTask } from './update-task/update-task';
 import { Guide } from './guide/guide';
+import { PieChart } from './pie-chart/pie-chart';
+
 @Component({
   selector: 'app-root',
   imports: [
@@ -46,7 +48,8 @@ import { Guide } from './guide/guide';
     ButtonModule,
     ToastModule,
     Guide,
-    TooltipModule
+    TooltipModule,
+    PieChart
   ],
   templateUrl: './app.html',
   styleUrl: './app.css',

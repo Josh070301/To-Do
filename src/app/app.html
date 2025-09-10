@@ -276,6 +276,17 @@
     </p-panel>
   </div>
 
+  <div class="card flex justify-center mt-4">
+    <div class="flex flex-col items-center">
+      <app-pie-chart
+        [chartLabels]="['Completed', 'Pending']"
+        [chartColors]="['#7589c9', '#66b672']"
+        [chartHoverColors]="['#5a6ea6', '#4e995a']"
+        [chartData]="[todosPending.length, todosCompleted.length]"
+      />
+    </div>
+  </div>
+
 </div>
 
 <!-- Tailwind Modal - Add Task -->

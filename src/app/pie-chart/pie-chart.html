@@ -1,0 +1,15 @@
+<div 
+  class="card flex justify-center border-4 border-cyan-500 rounded-xl shadow-lg bg-white p-8 z-20"
+  style="box-shadow: 0 8px 32px rgba(0, 188, 212, 0.18) !important; border-color: #00bcd4 !important;"
+>
+    <p-chart 
+        type="pie" 
+        [data]="data()" 
+        [options]="options()" 
+    />
+    <div class="mt-4 flex flex-col items-center gap-1 text-gray-700 text-base font-semibold">
+        <span>Total Tasks: {{ totalCount() }}</span>
+        <span>Pending: {{ pendingCount() }}</span>
+        <span>Completed: {{ completedCount() }}</span>
+    </div>
+</div>
