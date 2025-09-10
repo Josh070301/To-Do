@@ -8,6 +8,7 @@ import { ListboxModule } from 'primeng/listbox';
 import { TableModule } from 'primeng/table';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ButtonModule } from 'primeng/button';
+import { TooltipModule } from 'primeng/tooltip';
 // NOTE Toasts PrimeNG
 import { ToastModule } from 'primeng/toast';
 
@@ -44,7 +45,8 @@ import { Guide } from './guide/guide';
     CheckboxModule,
     ButtonModule,
     ToastModule,
-    Guide
+    Guide,
+    TooltipModule
   ],
   templateUrl: './app.html',
   styleUrl: './app.css',
@@ -58,9 +60,10 @@ export class App {
   todos = this.service.getTodos('');
   todosPending = this.service.getTodosPending('');
   todosCompleted = this.service.getTodosCompleted('');
-  currentDate = new Date()
-  
-  // SECTION 
+  protected readonly currentDate = signal(new Date());
+  private intervalId: number | undefined;
+
+  // SECTION (getter methods) for DOM updates
   
   // NOTE Reactive states with getter property to allow re-usability without calling it like a function
   get totalTasksCount() {
@@ -79,6 +82,32 @@ export class App {
     return result;
   }
 
+  // NOTE Update the currentDate signal every second
+  ngOnInit(): void {
+    this.intervalId = setInterval(() => {
+      this.currentDate.set(new Date());
+    }, 1000);
+  }
+
+  // NOTE Destroy the interval service
+  ngOnDestroy(): void {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+    }
+  }
+  
+  get currentDateAndTime(): string {
+    // NOTE Remove timezone info from toString
+    console.log('getCurrentDateAndTime ran')
+    return this.currentDate().toString().split(' GMT')[0];
+  }
+  
+  getHour(dateString: string): number {
+    // NOTE Assumes dateString is in format "Wed Sep 10 2025 08:54:14"
+    const parts = dateString.split(' ')[4]?.split(':');
+    return parts ? Number(parts[0]) : 0;
+  }
+
   // NOTE past deadline checker
   isPastDeadline(date_deadline?: unknown): boolean {
     if (!date_deadline) {
@@ -90,8 +119,11 @@ export class App {
         ? date_deadline
         : undefined;
     if (!deadlineDate) return false;
-    return deadlineDate < this.currentDate;
+    return deadlineDate < this.currentDate();
   }
+
+  
+
 
   // !SECTION
 
@@ -105,7 +137,7 @@ export class App {
     this.todosCompleted = this.service.getTodosCompleted(this.searchTitle);
     console.log("Searched Pending: ", this.todosPending);
     console.log("Searched Completed: ", this.todosCompleted);
-  }
+  } 
 
   // NOTE Clears filter
   clearFilter() {

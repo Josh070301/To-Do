@@ -20,7 +20,7 @@
           [raised]="true" 
           severity="secondary" 
           (click)="clearFilter()"
-          class="w-full sm:w-auto"
+          class="w-full sm:w-auto no-wrap-label"
       />
       <button
         type="button"
@@ -31,14 +31,31 @@
           'Click the pencil icon to edit a task, and the trash icon to delete a task.',
           'The Add a Task button opens a form to create a new task.'
         ])"
+        pTooltip="Show Guide"
+        tooltipPosition="bottom"
         aria-label="Show Guide"
       >
         <i class="pi pi-info-circle mr-2 mt-2" style="font-size: 1.5rem; color: white;"></i>
       </button>
     </div>
 
+    <div
+      class="bg-white text-gray-700 rounded-md shadow px-4 py-2 font-semibold flex items-center justify-center w-full sm:w-auto border border-gray-200"
+    >
+      <span class="mr-2">
+        @if (getHour(currentDateAndTime) < 12) {
+          <i class="pi pi-sun text-yellow-400" style="font-size: 1.25rem"></i>
+        } @else if (getHour(currentDateAndTime) < 18) {
+          <i class="pi pi-sun text-yellow-600" style="font-size: 1.25rem"></i>
+        } @else {
+          <i class="pi pi-moon text-blue-600" style="font-size: 1.25rem"></i>
+        }
+      </span>
+      {{ currentDateAndTime }}
+    </div>
+
     <button
-      class="bg-blue-600 text-white py-2 px-4 rounded-md flex items-center gap-2 font-bold hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors w-full sm:w-auto"
+      class="bg-gray-600 text-white py-2 px-4 rounded-md flex items-center gap-2 font-bold hover:bg-black focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors w-full sm:w-auto"
       (click)="openAddTaskDialog()">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
         <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
@@ -63,11 +80,35 @@
           <ng-template #header>
               <tr>
                   <th>Controls</th>
-                  <th>Title</th>
-                  <th>Description</th>
-                  <th>Deadline</th>
-                  <th>Status</th>
-                  <th>Created Date</th>
+                  <th pSortableColumn="title">
+                    <div class="flex items-center gap-1">
+                      Title
+                      <p-sortIcon field="title"></p-sortIcon>
+                    </div>
+                  </th>
+                  <th pSortableColumn="description">
+                    <div class="flex items-center gap-1">
+                      Description
+                      <p-sortIcon field="description"></p-sortIcon>
+                    </div>
+                  </th>
+                  <th pSortableColumn="date_deadline">
+                    <div class="flex items-center gap-1">
+                      Deadline
+                      <p-sortIcon field="date_deadline"></p-sortIcon>
+                    </div>
+                  </th>
+                  <th>
+                    <div class="flex items-center gap-1">
+                      Status
+                    </div>
+                  </th>
+                  <th pSortableColumn="date_created">
+                    <div class="flex items-center gap-1">
+                      Created Date
+                      <p-sortIcon field="date_created"></p-sortIcon>
+                    </div>
+                  </th>
               </tr>
           </ng-template>
           <ng-template #body let-todo>
@@ -78,11 +119,15 @@
                     <p-checkbox 
                       [ngModel]="todo.completed"
                       [binary]="todo.completed" 
+                      pTooltip="Mark as Completed"
+                      tooltipPosition="bottom"
                       (onChange)="toggleTodo({id: todo.id})">
                     </p-checkbox>
                     <button
                       type="button"
                       class="text-blue-600 hover:text-blue-800 focus:outline-none"
+                      pTooltip="Edit Task"
+                      tooltipPosition="bottom"
                       (click)="openUpdateTaskDialog(todo)"
                       aria-label="Edit Task"
                     >
@@ -91,6 +136,8 @@
                     <button
                       type="button"
                       class="text-red-600 hover:text-red-800 focus:outline-none"
+                      pTooltip="Delete Task"
+                      tooltipPosition="bottom"
                       (click)="openConfirmDeletionDialog(todo.id)"
                       aria-label="Delete Task"
                     >
@@ -136,11 +183,35 @@
           <ng-template #header>
               <tr>
                   <th>Controls</th> 
-                  <th>Title</th>
-                  <th>Description</th>
-                  <th>Deadline</th>
-                  <th>Status</th>
-                  <th>Created Date</th>
+                  <th pSortableColumn="title">
+                    <div class="flex items-center gap-1">
+                      Title
+                      <p-sortIcon field="title"></p-sortIcon>
+                    </div>
+                  </th>
+                  <th pSortableColumn="description">
+                    <div class="flex items-center gap-1">
+                      Description
+                      <p-sortIcon field="description"></p-sortIcon>
+                    </div>
+                  </th>
+                  <th pSortableColumn="date_deadline">
+                    <div class="flex items-center gap-1">
+                      Deadline
+                      <p-sortIcon field="date_deadline"></p-sortIcon>
+                    </div>
+                  </th>
+                  <th>
+                    <div class="flex items-center gap-1">
+                      Status
+                    </div>
+                  </th>
+                  <th pSortableColumn="date_created">
+                    <div class="flex items-center gap-1">
+                      Created Date
+                      <p-sortIcon field="date_created"></p-sortIcon>
+                    </div>
+                  </th>
               </tr>
           </ng-template>
           <ng-template #body let-todo>
@@ -151,11 +222,15 @@
                     <p-checkbox 
                       [ngModel]="todo.completed"
                       [binary]="todo.completed" 
+                      pTooltip="Change To Pending"
+                      tooltipPosition="bottom"
                       (onChange)="toggleTodo({id: todo.id})">
                     </p-checkbox>
                     <button
                       type="button"
                       class="text-blue-600 hover:text-blue-800 focus:outline-none"
+                      pTooltip="Edit Task"
+                      tooltipPosition="bottom"
                       (click)="openUpdateTaskDialog(todo)"
                       aria-label="Edit Task"
                     >
@@ -164,6 +239,8 @@
                     <button
                       type="button"
                       class="text-red-600 hover:text-red-800 focus:outline-none"
+                      pTooltip="Delete Task"
+                      tooltipPosition="bottom"
                       (click)="openConfirmDeletionDialog(todo.id)"
                       aria-label="Delete Task"
                     >
