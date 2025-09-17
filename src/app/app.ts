@@ -64,6 +64,7 @@ export class App {
   todosPending = this.service.getTodosPending('');
   todosCompleted = this.service.getTodosCompleted('');
   protected readonly currentDate = signal(new Date());
+  
   private intervalId: number | undefined;
 
   // SECTION (getter methods) for DOM updates

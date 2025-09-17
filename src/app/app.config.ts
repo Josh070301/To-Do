@@ -16,7 +16,11 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     providePrimeNG({
         theme: {
-            preset: Lara
+            preset: Lara,
+            options: {
+                darkModeSelector: '',
+                ripple: true
+            }
         }
     }),
     provideAnimations(),
